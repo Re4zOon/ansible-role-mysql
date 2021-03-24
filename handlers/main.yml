@@ -1,5 +1,6 @@
 ---
 - name: Get masters public key
+  become: true
   command: 
     cmd: "mysql --ssl-mode=DISABLED -u {{ mysql_replication_user.name }} -p{{ mysql_replication_user.password }} --get-server-public-key -e\"exit\""
 
