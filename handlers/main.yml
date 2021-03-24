@@ -1,5 +1,3 @@
 ---
-- name: Get masters public key
-
 - name: restart mysql
   service: "name={{ mysql_daemon }} state=restarted sleep=5"
