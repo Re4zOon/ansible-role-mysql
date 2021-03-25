@@ -50,24 +50,24 @@
     - (mysql_replication_master | length) > 0
 
 - name: "Query mysql master semi-sync plugin"
-  mysql_query:
+  community.mysql.mysql_query:
     query: "SELECT PLUGIN_NAME, PLUGIN_STATUS FROM INFORMATION_SCHEMA.PLUGINS WHERE PLUGIN_NAME LIKE '%semi_sync_master%'"
   register: master_plugin_installed
 
 - name: "Install master semi-sync plugin"
-  mysql_query:
+  community.mysql.mysql_query:
     query: "INSTALL PLUGIN rpl_semi_sync_master SONAME 'semisync_master.so'"
   when: 
     - master_plugin_installed.rowcount[0] == 0
     - semi_sync_master_enabled == 1
 
 - name: "Query mysql slave semi-sync plugin"
-  mysql_query:
+  community.mysql.mysql_query:
     query: "SELECT PLUGIN_NAME, PLUGIN_STATUS FROM INFORMATION_SCHEMA.PLUGINS WHERE PLUGIN_NAME LIKE '%semi_sync_slave%'"
   register: slave_plugin_installed
 
 - name: "Install slave semi-sync plugin"
-  mysql_query:
+  community.mysql.mysql_query:
     query: "INSTALL PLUGIN rpl_semi_sync_slave SONAME 'semisync_slave.so'"
   when: 
     - slave_plugin_installed.rowcount[0] == 0
