@@ -60,6 +60,7 @@
   when: 
     - master_plugin_installed.rowcount[0] == 0
     - mysql_semi_sync_enabled|bool == true
+  notify: restart mysql
 
 - name: "Query mysql slave semi-sync plugin"
   community.mysql.mysql_query:
@@ -72,6 +73,7 @@
   when: 
     - slave_plugin_installed.rowcount[0] == 0
     - mysql_semi_sync_enabled|bool == true
+  notify: restart mysql
 
 - name: Start replication.
   become: true
