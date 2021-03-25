@@ -49,7 +49,7 @@
     - mysql_replication_user.name is defined
     - (mysql_replication_master | length) > 0
 
-- name: "Query mysql master semi-sync plugin"
+- name: "Check for master semi-sync plugin"
   community.mysql.mysql_query:
     query: "SELECT PLUGIN_NAME, PLUGIN_STATUS FROM INFORMATION_SCHEMA.PLUGINS WHERE PLUGIN_NAME LIKE '%semi_sync_master%'"
   register: master_plugin_installed
@@ -62,7 +62,7 @@
     - mysql_semi_sync_enabled|bool == true
   notify: restart mysql
 
-- name: "Query mysql slave semi-sync plugin"
+- name: "Check for slave semi-sync plugin"
   community.mysql.mysql_query:
     query: "SELECT PLUGIN_NAME, PLUGIN_STATUS FROM INFORMATION_SCHEMA.PLUGINS WHERE PLUGIN_NAME LIKE '%semi_sync_slave%'"
   register: slave_plugin_installed
