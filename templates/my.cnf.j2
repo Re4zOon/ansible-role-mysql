@@ -61,7 +61,7 @@ read_only
 relay-log = relay-bin
 relay-log-index = relay-bin.index
 {% endif %}
-{% if mysql_semi_sync_master_enabled == '1' %}
+{% if mysql_semi_sync_enabled %}
 {% if mysql_replication_role == 'master' %}
 loose-rpl_semi_sync_master_enabled = 1
 loose-rpl_semi_sync_master_timeout = {{ mysql_semi_sync_master_timeout }} # 1000 msec
