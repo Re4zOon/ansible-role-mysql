@@ -17,6 +17,9 @@ skip-name-resolve
 {% if mysql_sql_mode %}
 sql_mode = {{ mysql_sql_mode }}
 {% endif %}
+{% if mysql_skip-external-locking %}
+skip-external-locking
+{% endif %}
 
 # Logging configuration.
 {% if mysql_log_error == 'syslog' or mysql_log == 'syslog' %}
@@ -41,17 +44,31 @@ long_query_time = {{ mysql_slow_query_time }}
 gtid_mode = ON
 enforce_gtid_consistency = ON
 server-id = {{ mysql_server_id }}
+relay_log_info_repository = TABLE
 
 log_bin = mysql-bin
 log-bin-index = mysql-bin.index
 expire_logs_days = {{ mysql_expire_logs_days }}
 max_binlog_size = {{ mysql_max_binlog_size }}
 binlog_format = {{mysql_binlog_format}}
+{% if mysql_binlog_format = "ROW" %}
+binlog_row_image = minimal
+{% endif %}
+sync_binlog = 1
 
 {% if mysql_replication_role == 'slave' %}
 read_only
 relay-log = relay-bin
 relay-log-index = relay-bin.index
+{% endif %}
+{% if mysql_semi_sync_master_enabled == '1' %}
+{% if mysql_replication_role == 'master' %}
+loose-rpl_semi_sync_master_enabled = 1
+loose-rpl_semi_sync_master_timeout = {{ mysql_semi_sync_master_timeout }} # 1000 msec
+loose-rpl_semi_sync_master_wait_for_slave_count = {{ mysql_semi_sync_master_wait_for_slave_count }}
+{% endif %}
+{% if mysql_replication_role == 'slave' %}
+loose-rpl_semi_sync_slave_enabled = 1
 {% endif %}
 {% endif %}
 
@@ -100,6 +117,7 @@ innodb_log_file_size = {{ mysql_innodb_log_file_size }}
 innodb_log_buffer_size = {{ mysql_innodb_log_buffer_size }}
 innodb_flush_log_at_trx_commit = {{ mysql_innodb_flush_log_at_trx_commit }}
 innodb_lock_wait_timeout = {{ mysql_innodb_lock_wait_timeout }}
+innodb_undo_log_truncate = {{ mysql_innodb_undo_log_truncate }}
 
 [mysqldump]
 quick
